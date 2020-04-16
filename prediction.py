@@ -18,5 +18,9 @@ m.fit(df)
 future = m.make_future_dataframe(periods=365)
 forecast = m.predict(future)
 fig1 = m.plot(forecast)
-plt.plot(df["ds"], df["y"])
-plt.show()
+print(forecast[['yhat']].iloc[-1])
+import plotly.express as px
+import plotly.io as pio
+pio.renderers.default = "vscode"
+fig = px.scatter(df, x="ds", y="y")
+fig.show()
