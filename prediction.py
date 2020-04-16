@@ -21,6 +21,6 @@ fig1 = m.plot(forecast)
 print(forecast[['yhat']].iloc[-1])
 import plotly.express as px
 import plotly.io as pio
-pio.renderers.default = "vscode"
+pio.renderers.default = "png"
 fig = px.scatter(df, x="ds", y="y")
 fig.show()
