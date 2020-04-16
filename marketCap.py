@@ -4,7 +4,6 @@ from pandas_datareader import data
 import quandl
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-
 import sys
 #Filter out API-Warnings
 if sys.warnoptions:
