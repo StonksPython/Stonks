@@ -9,6 +9,8 @@ import quandl
 quandl.ApiConfig.api_key = 'NxTUTAQswbKs5ybBbwfK'
 #Predicting Stock Price with Prophet
 df = quandl.get('WIKI/GOOGL')
+fig3 = df.plot(y='High')
+fig3.figure.savefig('/home/dev/Stonks/preIndexReset.png')
 df = df.reset_index(0)
 df = df.drop(columns=['Open', 'Low', 'Close', 'Volume', 'Ex-Dividend', 'Split Ratio', 'Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume'])
 df = df.rename(columns={"Date": "ds", "High": "y"})
