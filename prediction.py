@@ -9,6 +9,7 @@ import quandl
 quandl.ApiConfig.api_key = 'NxTUTAQswbKs5ybBbwfK'
 #Predicting Stock Price with Prophet
 df = quandl.get('WIKI/GOOGL')
+df = df['2015-01':'2020-04']
 fig3 = df.plot(y='High')
 fig3.figure.savefig('/home/dev/Stonks/preIndexReset.png')
 df = df.reset_index(0)
