@@ -7,7 +7,7 @@ import sys
 if sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
-#Return Stock Volatility
+#Return Market Capitalization
 def marketCap(name):
     marketCap = data.get_quote_yahoo(name)['marketCap']
     temp =  marketCap[name]
