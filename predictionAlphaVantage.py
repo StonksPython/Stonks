@@ -5,16 +5,14 @@ import pandas as pd
 import datetime as dt
 from fbprophet import Prophet
 import numpy as np
-import quandl
-quandl.ApiConfig.api_key = 'NxTUTAQswbKs5ybBbwfK'
 #Predicting Stock Price with Prophet
-df = quandl.get('EOD/GOOGL')
-df = df['2015-01'::]
-fig3 = df.plot(y='High')
+df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=WCXVE7BAD668SJHL&datatype=csv&outputsize=full')
+df = df.rename(columns={"timestamp": "Date"})
+fig3 = df.plot(y='high')
 fig3.figure.savefig('/home/dev/Stonks/preIndexReset.png')
 df = df.reset_index(0)
-df = df.drop(columns=['Open', 'Low', 'Close', 'Volume', 'Ex-Dividend', 'Split Ratio', 'Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume'])
-df = df.rename(columns={"Date": "ds", "High": "y"})
+df = df.drop(columns=['open', 'low', 'close', 'volume'])
+df = df.rename(columns={"Date": "ds", "high": "y"})
 fig = df.plot(x='ds', y='y')
 fig.figure.savefig('/home/dev/Stonks/preProphet.png')
 m = Prophet()
