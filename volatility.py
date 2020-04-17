@@ -6,7 +6,6 @@ quandl.ApiConfig.api_key = 'NxTUTAQswbKs5ybBbwfK'
 #Historical Volitiliy is based on past performance - how much stock varies from Market
 def historicalVolatility(name):
     df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv&outputsize=full')
-    # use the daily data of Google(NASDAQ: GOOG) from 01/2016 to 08/2016
     close = df['close']
     r = diff(log(close))
     r_mean = mean(r)
