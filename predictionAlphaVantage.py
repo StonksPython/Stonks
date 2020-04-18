@@ -18,11 +18,11 @@ def prophetPredict(name):
     fig.figure.savefig('/home/dev/Stonks/preProphet.png')
     m = Prophet()
     m.fit(df)
-    future = m.make_future_dataframe(periods=365)
+    future = m.make_future_dataframe(periods=5)
     forecast = m.predict(future)
     fig1 = m.plot(forecast)
     fig1.savefig('/home/dev/Stonks/postProphet.png')
     i = forecast[['yhat']].iloc[-1]
     return i['yhat']
-y = prophetPredict('IBM')
+y = prophetPredict('AAPL')
 print(y)
