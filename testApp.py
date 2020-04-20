@@ -33,11 +33,12 @@ def get_series():
     series = []
     for name in names:
         df = get_dataframe(name)
+        
         series.append(df)
     for df in series:
         df['Normalized Return'] = df['close']/df.iloc[0]['close']
     stocks = pd.concat(series, axis = 1)
-    stocks.columns = ['AAPL','GOOGL','FB','IBM', 'AMZN']
+    stocks.columns = ['AAPL', 'AAPL Ret','GOOGL','GOOGL Ret','FB', 'FB Ret','IBM', 'IBM Ret','AMZN','AMZN Ret']
     stocks['Date'] = stocks.index
     return stocks
 
@@ -47,6 +48,7 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='live-dropdown',
         value='AAPL',
+        multi=False,
         options=[{'label': i, 'value': i} for i in get_series().columns]
     ),
     dcc.Graph(id='live-graph')
