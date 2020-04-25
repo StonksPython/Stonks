@@ -5,6 +5,8 @@ import pandas as pd
 import datetime as dt
 from fbprophet import Prophet
 import numpy as np
+import time
+#BackupKey = JA1VCTFBG7378ZB7
 def get_dataframe(name):
     df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
     df = df.rename(columns={"timestamp":"Date"})
@@ -30,11 +32,14 @@ def get_series(names):
         series.append(df)
     return series
 #main is here
+
 names = ['AAPL', 'GOOGL', 'FB', 'IBM', 'AMZN']
 series = get_series(names)
 stocks = pd.concat(series, axis = 1)
 stocks = stocks.drop(columns={'Date'})
 stocks.columns = ['aapl','googl','fb','ibm', 'amzn']
+
+log_return = np.log(stocks/stocks.shift(1))
 
 weights = np.array(np.random.random(5))
 print('Random Weights:')
@@ -61,15 +66,15 @@ print(SR)
 
 import multiprocessing
 
-log_return = np.log(stocks/stocks.shift(1))
 
 ports = 5000
 all_weights = np.zeros((ports, len(stocks.columns)))
 ret_arr = np.zeros(ports)
 vol_arr = np.zeros(ports)
 sharpe_arr = np.zeros(ports)
+start_time = time.time()
 
-for i in range(ports): 
+def getStats(i):
     # weights 
     weights = np.array(np.random.random(5)) 
     weights = weights/np.sum(weights)  
@@ -85,3 +90,9 @@ for i in range(ports):
 
     # Sharpe Ratio 
     sharpe_arr[i] = ret_arr[i]/vol_arr[i]
+
+for i in range(5):
+    p = multiprocessing.Process(target=getStats, args=(i,))
+    p.start()
+
+print("--- %s seconds ---" % (time.time() - start_time))   
