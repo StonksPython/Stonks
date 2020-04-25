@@ -62,6 +62,7 @@ print(SR)
 import multiprocessing
 
 log_return = np.log(stocks/stocks.shift(1))
+
 ports = 5000
 all_weights = np.zeros((ports, len(stocks.columns)))
 ret_arr = np.zeros(ports)
