@@ -91,7 +91,7 @@ def getStats(i):
     # Sharpe Ratio 
     sharpe_arr[i] = ret_arr[i]/vol_arr[i]
 
-for i in range(5):
+for i in range(ports):
     p = multiprocessing.Process(target=getStats, args=(i,))
     p.start()
 
