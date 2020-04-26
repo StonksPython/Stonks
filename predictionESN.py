@@ -24,3 +24,9 @@ df = df.reset_index()
 df = df.rename(columns={"index":"x", "close":"y"})
 print(df.head())
 
+n_resevoir = 500
+sparsity = 0.2
+rand_seed = 23
+spectral_radius = 1.2
+noise = 0.0005
+
