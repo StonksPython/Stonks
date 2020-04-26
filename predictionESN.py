@@ -32,4 +32,11 @@ spectral_radius = 1.2
 noise = 0.0005
 
 esn = ESN(n_inputs=1,n_outputs=1,n_reservoir=n_resevoir,sparsity=sparsity,random_state=rand_seed,spectral_radius=spectral_radius,noise=noise)
+#First training will be with 2,000 datapoints to test accuracy
+trainlen = 2000
+#We want to predict the next day
+future = 1
+#we want to keep predicting this way for the next 3032 points
+futureTotal = 3032
+predictedTotal = np.zeroes(futureTotal)
 
