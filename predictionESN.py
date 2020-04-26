@@ -40,10 +40,24 @@ trainlen = 2000
 future = 1
 #we want to keep predicting this way for the next 3032 points
 futureTotal = 3032
-predictedTotal = np.zeroes(futureTotal)
-
+predictedTotal = np.zeros(futureTotal)
+y = df['y']
+y = y.to_numpy()
+print('y data:')
+print(type(y))
+print(y)
 #travers futureTotal by future days at a time
 for i in range(0, futureTotal, future):
-    predictedTraining = esn.fit(np.ones(trainlen), df['y'][i:trainlen+i])
+    predictedTraining = esn.fit(np.ones(trainlen), y[i:trainlen+i])
     prediction = esn.predict(np.ones(future))
     predictedTotal[i:i+future] = prediction[:,0]
+
+error, validation_set = run_echo(1.2, .005,2)
+plt.figure(figsize=(18,8))
+plt.plot(range(0,trainlen+future),y[0:trainlen+future],'k',label="target system")
+plt.plot(range(trainlen,trainlen+100),validation_set.reshape(-1,1),'r', label="free running ESN")
+lo,hi = plt.ylim()
+plt.plot([trainlen,trainlen],[lo+np.spacing(1),hi-np.spacing(1)],'k:')
+plt.legend(loc=(0.61,0.12),fontsize='x-large')
+sns.despine();
+
