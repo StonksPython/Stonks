@@ -11,6 +11,8 @@ import seaborn as sns
 import warnings
 warnings.filterwarnings('ignore')
 from pyESN import ESN 
+from matplotlib import rc
+
 
 #Implementation based off: https://towardsdatascience.com/predicting-stock-prices-with-echo-state-networks-f910809d23d4
 
@@ -47,17 +49,31 @@ print('y data:')
 print(type(y))
 print(y)
 #travers futureTotal by future days at a time
-for i in range(0, futureTotal, future):
+
+def predict(i, future, trainlen):
     predictedTraining = esn.fit(np.ones(trainlen), y[i:trainlen+i])
     prediction = esn.predict(np.ones(future))
     predictedTotal[i:i+future] = prediction[:,0]
+start_time = time.time()
 
-error, validation_set = run_echo(1.2, .005,2)
-plt.figure(figsize=(18,8))
-plt.plot(range(0,trainlen+future),y[0:trainlen+future],'k',label="target system")
-plt.plot(range(trainlen,trainlen+100),validation_set.reshape(-1,1),'r', label="free running ESN")
-lo,hi = plt.ylim()
-plt.plot([trainlen,trainlen],[lo+np.spacing(1),hi-np.spacing(1)],'k:')
-plt.legend(loc=(0.61,0.12),fontsize='x-large')
-sns.despine();
+import multiprocessing
+for i in range(trainlen):
+    p = multiprocessing.Process(target=predict, args=(i,future,trainlen))
+    p.start()
+print("--- %s seconds ---" % (time.time() - start_time))
+rc('text', usetex=False)
+fig  = plt.figure(figsize=(16,8))
+fig.plot(range(1000,trainlen+futureTotal),y[1000:trainlen+futureTotal],'b',label="Data", alpha=0.3)
+#plt.plot(range(0,trainlen),pred_training,'.g',  alpha=0.3)
+fig.plot(range(trainlen,trainlen+futureTotal),predictedTotal,'k',  alpha=0.8, label='Free Running ESN')
 
+lo,hi = fig.ylim()
+fig.plot([trainlen,trainlen],[lo+np.spacing(1),hi-np.spacing(1)],'k:', linewidth=4)
+
+fig.title(r'Ground Truth and Echo State Network Output', fontsize=25)
+fig.xlabel(r'Time (Days)', fontsize=20,labelpad=10)
+fig.ylabel(r'Price ($)', fontsize=20,labelpad=10)
+fig.legend(fontsize='xx-large', loc='best')
+fig.figure.savefig('/home/homeuser/Stonks/ESN.png')
+
+sns.despine()
