@@ -30,3 +30,4 @@ rand_seed = 23
 spectral_radius = 1.2
 noise = 0.0005
 
+esn = ESN(n_inputs=1,n_outputs=1,n_reservoir=n_resevoir,sparsity=sparsity,random_state=rand_seed,spectral_radius=spectral_radius,noise=noise)
