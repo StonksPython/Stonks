@@ -12,3 +12,15 @@ import warnings
 warnings.filterwarnings('ignore')
 from pyESN import ESN 
 
+df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + 'AMZN' +'&apikey=WCXVE7BAD668SJHL&datatype=csv&outputsize=full')
+df = df.rename(columns={"timestamp":"Date"})
+df = df.set_index(df['Date'])
+df = df.sort_index()
+df = df.drop(columns=['open', 'low', 'high', 'volume'])
+df = df.drop(columns=['Date'])
+df = df.reset_index()
+df = df.drop(columns=['Date'])
+df = df.reset_index()
+df = df.rename(columns={"index":"x", "close":"y"})
+print(df.head())
+
