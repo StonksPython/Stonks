@@ -12,6 +12,8 @@ import warnings
 warnings.filterwarnings('ignore')
 from pyESN import ESN 
 
+#Implementation based off: https://towardsdatascience.com/predicting-stock-prices-with-echo-state-networks-f910809d23d4
+
 df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + 'AMZN' +'&apikey=WCXVE7BAD668SJHL&datatype=csv&outputsize=full')
 df = df.rename(columns={"timestamp":"Date"})
 df = df.set_index(df['Date'])
