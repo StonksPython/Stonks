@@ -68,7 +68,6 @@ fig.plot(range(1000,trainlen+futureTotal),y[1000:trainlen+futureTotal],'b',label
 fig.plot(range(trainlen,trainlen+futureTotal),predictedTotal,'k',  alpha=0.8, label='Free Running ESN')
 
 lo,hi = fig.ylim()
-fig.plot([trainlen,trainlen],[lo+np.spacing(1),hi-np.spacing(1)],'k:', linewidth=4)
 
 fig.title(r'Ground Truth and Echo State Network Output', fontsize=25)
 fig.xlabel(r'Time (Days)', fontsize=20,labelpad=10)
