@@ -40,3 +40,8 @@ future = 1
 futureTotal = 3032
 predictedTotal = np.zeroes(futureTotal)
 
+#travers futureTotal by future days at a time
+for i in range(0, futureTotal, future):
+    predictedTraining = esn.fit(np.ones(trainlen), df['y'][i:trainlen+i])
+    prediction = esn.predict(np.ones(future))
+    predictedTotal[i:i+future] = prediction[:,0]
