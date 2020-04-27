@@ -9,7 +9,7 @@ Trading Algorithm I am Developing. Made Entirely from Scratch, does not use exis
 3. Collect Data for a cluster of stocks with that share price (For example, all Tech stocks with a price between 100 and 1,000 dollars
 4. Run Prophet Prediction on each Stock
 5. Run ARIMA Predictions on each Stock
-6. Apply an LTSM with Tensorflow to predict share price of each stock.
+6. Apply an ESN Model to predict stock prices
 7. Store most accurate share price prediction for the next day
 8. Get Twitter Sentiment Score for each Stock
 9. Calculate Volatility of each Stock
