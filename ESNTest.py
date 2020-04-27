@@ -40,10 +40,6 @@ y = df['y']
 y = y.to_numpy()
 print(y)
 
-figure(10).clear()
-plot(y[0:1000])
-title('A sample of data')
-
 inSize = outSize = 1
 resSize = 100
 a = 0.3
