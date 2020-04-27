@@ -7,11 +7,14 @@ from fbprophet import Prophet
 import numpy as np
 from tqdm import tqdm
 import time
+import requests
 #Predicting Stock Price with Prophet
+predictedPrices = {}
 def get_dataframe(name):
-    df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
+    
+    df = pd.read_csv(('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=JA1VCTFBG7378ZB7&datatype=csv'))
     return df
-def run_prophet(df):
+def run_prophet(df, name):
     df = df.rename(columns={"timestamp": "Date"})
     #fig3 = df.plot(y='high')
     #fig3.figure.savefig('/home/homuser/Stonks/preIndexReset.png')
@@ -27,6 +30,7 @@ def run_prophet(df):
     #fig1 = m.plot(forecast)
     #fig1.savefig('/home/homeuser/Stonks/postProphet.png')
     i = forecast[['yhat']].iloc[-1]
+    predictedPrices[name].append(i['yhat'])
     return i['yhat']
 def get_series(names):
     series = []
@@ -42,7 +46,7 @@ series = get_series(names)
 from multiprocessing import Pool, cpu_count
 start_time = time.time()
 p = Pool(cpu_count())
-predictions = list(tqdm(p.imap(run_prophet, series), total=len(series)))
+predictions = list(tqdm(p.imap(run_prophet, series, names), total=len(series)))
 p.close()
 p.join()
 print("--- %s seconds ---" % (time.time() - start_time))
