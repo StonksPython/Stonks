@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import scipy.linalg
 
 trainLen = 2000 #Use 2,000 points to train
-testLen = 2000 
+testLen = 3000 
 initLen = 100
 
 
@@ -88,9 +88,31 @@ mse = sum( square( y[trainLen+1:trainLen+errorLen+1] -
     Y[0,0:errorLen] ) ) / errorLen
 print('MSE = ' + str( mse ))
 
+def createList(r1, r2): 
+  
+    # Testing if range r1 and r2  
+    # are equal 
+    if (r1 == r2): 
+        return r1 
+  
+    else: 
+  
+        # Create empty list 
+        res = [] 
+  
+        # loop to append successors to  
+        # list until r2 is reached. 
+        while(r1 < r2+1 ): 
+              
+            res.append(r1) 
+            r1 += 1
+        return res 
+
 plt.figure(figsize=(16,8))
-plt.plot( y[trainLen+1:trainLen+testLen+1], 'g' )
-plt.plot( Y.T, 'b' )
+plt.plot( y[trainLen::], 'g' )
+print(Y.T)
+Xoffset = createList(2000,4000)
+plt.plot(Y.T, 'b' )
 plt.title('Target and generated signals $y(n)$ starting at $n=0$')
 plt.legend(['Target signal', 'Free-running predicted signal'])
 plt.savefig('/home/homeuser/Stonks/ESN.png')
