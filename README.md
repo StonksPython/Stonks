@@ -6,29 +6,16 @@ I know next to nothing about trading. This algorithm would probably be lousy in 
 
 ## General Proccess behind the Algorithm is as follows:
 
-0. Run the Algorithm after the market closes each Day
-1. Identify Buying Power
-2. Based of buying power, calculate maximum and minimum share price.
-3. Collect Data for a cluster of stocks with that share price (For example, all Tech stocks with a price between 100 and 1,000 dollars
-4. Run Prophet Prediction on each Stock
-5. Run ARIMA Predictions on each Stock
-6. Apply an ESN Model to predict stock prices
-7. Store most accurate share price prediction for the next day
-8. Get Twitter Sentiment Score for each Stock
-9. Calculate Volatility of each Stock
-10. Calculate Market Cap of each Stock
-11. Compare each of the collected values across Stocks, and rank each stock out of 10 in each category (Market Cap, Volatility, Sentiment Score, Predicted Share Price)
-12. Average Rankings to determine final ranking score
-13. Chose top 10 stocks to be in the portfolio.
-14. Calculate best weightage using a Sharpe Ratio and Monte Carlo (Test random weightages to determine best returns)
-15. After Identifying best weightage, place orders that will be ran 15 minutes after Market Opens next day
-
-
-On second glance, the steps above seem cumbersome, redundant, and slow. I will probably adjust to placing heavy weightage on the ESN prediction, put less weightage on the twitter sentiment score, and keep Market Cap and Volatility Ratings. 
-
-Then, a decision tree would be implemented to classify a stock as Good, Neutral, and Bad. Then I would test different portfolio weightage returns on the predicted values, and see what portfolio weightage would work out the best. 
-
-After that, adjust the portfolio to match by buying or selling shares.
+ - Identify Buying Power
+ - Adjust max/min share price accordingly
+ - Predict next day share price
+ - Calculate return
+ - Market Cap
+ - Volatility
+ - Liquidity
+ - Identify Sentiment
+ 
+ Classify as Hold, Buy, or Sell
 
 ## Possible Bottlenecks
 
