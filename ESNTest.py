@@ -14,7 +14,7 @@ import seaborn as sns
 import warnings
 warnings.filterwarnings('ignore')
 from numpy import *
-from matplotlib.pyplot import *
+import matplotlib.pyplot as plt
 import scipy.linalg
 
 trainLen = 2000 #Use 2,000 points to train
@@ -56,23 +56,28 @@ rhoW = max(abs(linalg.eig(W)[0]))
 print('done')
 W = W * 1.25/rhoW
 
-X = zeros((resSize,1))
-Yt = y[None, initLen+1:trainLen+1]
 
+# allocated memory for the design (collected states) matrix
+X = zeros((1+inSize+resSize,trainLen-initLen))
+# set the corresponding target matrix directly
+Yt = y[None,initLen+1:trainLen+1] 
+
+# run the reservoir with the data and collect X
 x = zeros((resSize,1))
-for i in range(trainLen):
-    temp = y[i]
-    x = (1-a)*x+a*tanh( dot( Win, vstacl((1,u)) ) + dot(W,x))
-    if i >= initLen:
-        X[:,i-trainLen] = vstack((1,u,x))[:,0]
-
-reg = 1e-8
-X_T = X.T 
+for t in range(trainLen):
+    u = y[t]
+    x = (1-a)*x + a*tanh( dot( Win, vstack((1,u)) ) + dot( W, x ) )
+    if t >= initLen:
+        X[:,t-initLen] = vstack((1,u,x))[:,0]
+    
+# train the output by ridge regression
+reg = 1e-8  # regularization coefficient
+X_T = X.T
 Wout = dot( dot(Yt,X_T), linalg.inv( dot(X,X_T) + \
     reg*eye(1+inSize+resSize) ) )
 
 Y = zeros((outSize,testLen))
-u = data[trainLen]
+u = y[trainLen]
 for t in range(testLen):
     x = (1-a)*x + a*tanh( dot( Win, vstack((1,u)) ) + dot( W, x ) )
     z = dot( Wout, vstack((1,u,x)) )
@@ -87,9 +92,9 @@ mse = sum( square( y[trainLen+1:trainLen+errorLen+1] -
     Y[0,0:errorLen] ) ) / errorLen
 print('MSE = ' + str( mse ))
 
-figure(1).clear()
-plot( y[trainLen+1:trainLen+testLen+1], 'g' )
-plot( Y.T, 'b' )
-title('Target and generated signals $y(n)$ starting at $n=0$')
-legend(['Target signal', 'Free-running predicted signal'])
-plot.savefig('/home/homeuser/Stonks/ESN.png')
+plt.figure(figsize=(16,8))
+plt.plot( y[trainLen+1:trainLen+testLen+1], 'g' )
+plt.plot( Y.T, 'b' )
+plt.title('Target and generated signals $y(n)$ starting at $n=0$')
+plt.legend(['Target signal', 'Free-running predicted signal'])
+plt.savefig('/home/homeuser/Stonks/ESN.png')
