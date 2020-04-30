@@ -14,7 +14,7 @@ def get_dataframe(name):
     
     df = pd.read_csv(('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=JA1VCTFBG7378ZB7&datatype=csv'))
     return df
-def run_prophet(df, name):
+def run_prophet(df):
     df = df.rename(columns={"timestamp": "Date"})
     #fig3 = df.plot(y='high')
     #fig3.figure.savefig('/home/homuser/Stonks/preIndexReset.png')
@@ -30,7 +30,7 @@ def run_prophet(df, name):
     #fig1 = m.plot(forecast)
     #fig1.savefig('/home/homeuser/Stonks/postProphet.png')
     i = forecast[['yhat']].iloc[-1]
-    predictedPrices[name].append(i['yhat'])
+    predictedPrices['name'].append(i['yhat'])
     return i['yhat']
 def get_series(names):
     series = []
@@ -46,7 +46,7 @@ series = get_series(names)
 from multiprocessing import Pool, cpu_count
 start_time = time.time()
 p = Pool(cpu_count())
-predictions = list(tqdm(p.imap(run_prophet, series, names), total=len(series)))
+predictions = list(tqdm(p.imap(run_prophet, series), total=len(series)))
 p.close()
 p.join()
 print("--- %s seconds ---" % (time.time() - start_time))
