@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import pandas as pd
 from numpy import sqrt,mean,log,diff
 import quandl
