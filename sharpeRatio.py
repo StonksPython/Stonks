@@ -34,13 +34,18 @@ def get_series(names):
     return series
 #main is here
 
-names = ['AAPL', 'GOOGL', 'FB', 'IBM', 'AMZN']
-series = get_series(names)
-stocks = pd.concat(series, axis = 1)
-stocks = stocks.drop(columns={'Date'})
-stocks.columns = ['aapl','googl','fb','ibm', 'amzn']
 
-log_return = np.log(stocks/stocks.shift(1))
+
+def getStocks(names):
+    series = get_series(names)
+    stocks = pd.concat(series, axis = 1)
+    stocks = stocks.drop(columns={'Date'})
+    stocks.columns = ['aapl','googl','fb','ibm', 'amzn']
+    return stocks
+
+def logReturn(stocks):
+    log_return = np.log(stocks/stocks.shift(1))
+    return log_return
 
 weights = np.array(np.random.random(5))
 print('Random Weights:')
