@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
 #Code is Based of this site: https://www.quantconnect.com/tutorials/introduction-to-options/historical-volatility-and-implied-volatility
 import pandas as pd
-from numpy import sqrt,mean,log,diff
-import quandl
-quandl.ApiConfig.api_key = 'NxTUTAQswbKs5ybBbwfK'
 #Historical Volitiliy is based on past performance - how much stock varies from Market
+def get_dataframe(name):
+    
+    df = pd.read_csv(('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=JA1VCTFBG7378ZB7&datatype=csv'))
+    return df
 def historicalVolatility(name):
-    df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv&outputsize=full')
+    df = get_dataframe(name)
     close = df['close']
     r = diff(log(close))
     r_mean = mean(r)
@@ -13,6 +15,3 @@ def historicalVolatility(name):
     std = sqrt(sum(diff_square)*(1.0/(len(r)-1)))
     vol = std*sqrt(252)
     return vol
-
-i = historicalVolatility('IBM')
-print(i)
