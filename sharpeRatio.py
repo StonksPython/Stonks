@@ -15,26 +15,13 @@ def get_dataframe(name):
     df = df.sort_index()
     df = df.drop(columns=['open', 'low', 'high', 'volume'])
     return df
-def run_prophet(df):
-    df = df.rename(columns={"timestamp": "Date"})
-    df = df.reset_index(0)
-    df = df.drop(columns=['open', 'low', 'close', 'volume'])
-    df = df.rename(columns={"Date": "ds", "high": "y"})
-    m = Prophet()
-    m.fit(df)
-    future = m.make_future_dataframe(periods=5)
-    forecast = m.predict(future)
-    i = forecast[['yhat']].iloc[-1]
-    return i['yhat']
+
 def get_series(names):
     series = []
     for name in names:
         df = get_dataframe(name)
         series.append(df)
     return series
-#main is here
-
-
 
 def getStocks(names):
     series = get_series(names)
@@ -47,23 +34,32 @@ def logReturn(stocks):
     log_return = np.log(stocks/stocks.shift(1))
     return log_return
 
-weights = np.array(np.random.random(5))
-print('Random Weights:')
-print(weights)
+def getRandomWeights():
+    weights = np.array(np.random.random(5))
+    print('Random Weights:')
+    print(weights)
+    return weights
 
-print('Rebalance')
-weights = weights/np.sum(weights)
-print(weights)
+def rebalanceWeights(weights):
+    print('Rebalance')
+    weights1 = weights/np.sum(weights)
+    print(weights1)
+    return weights1
 
-# expected return
-print('Expected Portfolio Return')
-exp_ret = np.sum((log_return.mean()*weights)*252)
-print(exp_ret)
+def expectedReturn(log_return, weights):
+    # expected return
+    print('Expected Portfolio Return')
+    exp_ret = np.sum((log_return.mean()*weights)*252)
+    print(exp_ret)
+    return exp_ret
 
-# expected volatility
-print('Expected Volatility')
-exp_vol = np.sqrt(np.dot(weights.T,np.dot(log_return.cov()*252, weights)))
-print(exp_vol)
+
+def expectedVolatility(log_return, weights):
+    # expected volatility
+    print('Expected Volatility')
+    exp_vol = np.sqrt(np.dot(weights.T,np.dot(log_return.cov()*252, weights)))
+    print(exp_vol)
+    return exp_vol
 
 # Sharpe Ratio
 print('Sharpe Ratio')
@@ -80,7 +76,8 @@ vol_arr = np.zeros(ports)
 sharpe_arr = np.zeros(ports)
 start_time = time.time()
 
-def getStats(i):
+
+def getStats(i, log_return):
     # weights 
     weights = np.array(np.random.random(5)) 
     weights = weights/np.sum(weights)  
