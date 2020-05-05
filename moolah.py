@@ -97,4 +97,74 @@ def getArrayStats(stocks, ports):
     arrayStats['volatility'].append(vol_arr)
     arrayStats['sharpe'].append(sharpe_arr)
     return arrayStats
-    
+
+from pandas_datareader import data
+#Return Market Capitalization
+def marketCap(name):
+    marketCap = data.get_quote_yahoo(name)['marketCap']
+    temp =  marketCap[name]
+    return temp
+
+def historicalVolatility(name):
+    df = get_dataframe(name)
+    close = df['close']
+    r = np.diff(np.log(close))
+    r_mean = np.mean(r)
+    diff_square = [(r[i]-r_mean)**2 for i in range(0,len(r))]
+    std = np.sqrt(sum(diff_square)*(1.0/(len(r)-1)))
+    vol = std*np.sqrt(252)
+    return vol
+
+def allTimePointChange(name):
+    df = get_dataframe(name)
+    last = df['close'][-1]
+    first = df['close'][0]
+    return first/last * 100
+
+def run_prophet(df):
+    df = df.rename(columns={"timestamp": "Date"})
+    #fig3 = df.plot(y='high')
+    #fig3.figure.savefig('/home/homuser/Stonks/preIndexReset.png')
+    df = df.reset_index(0)
+    df = df.drop(columns=['open', 'low', 'close', 'volume'])
+    df = df.rename(columns={"Date": "ds", "high": "y"})
+    #fig = df.plot(x='ds', y='y')
+    #fig.figure.savefig('/home/homeuser/Stonks/preProphet.png')
+    m = Prophet()
+    m.fit(df)
+    future = m.make_future_dataframe(periods=5)
+    forecast = m.predict(future)
+    #fig1 = m.plot(forecast)
+    #fig1.savefig('/home/homeuser/Stonks/postProphet.png')
+    i = forecast[['yhat']].iloc[-1]
+    return i['yhat']
+
+def get_series(names):
+    series = []
+    for name in names:
+        df = get_dataframe(name)
+        series.append(df)
+    return series
+
+from fbprophet import Prophet
+import numpy as np
+from tqdm import tqdm
+import time
+import requests
+from multiprocessing import Pool, cpu_count
+
+#multiprocessing implemented - https://medium.com/spikelab/forecasting-multiples-time-series-using-prophet-in-parallel-2515abd1a245
+def predictedPrices(names):
+    series = get_series(names)
+    start_time = time.time()
+    p = Pool(cpu_count())
+    predictions = list(tqdm(p.imap(run_prophet, series), total=len(series)))
+    predictedPrices = {}
+    count = 0
+    for name in names:
+        predictedPrices[name].append(predictions[count])
+        count+=1
+    p.join()
+    print(predictions)
+    print("--- %s seconds ---" % (time.time() - start_time))
+    return predictedPrices
