@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #Code is Based of this site: https://www.quantconnect.com/tutorials/introduction-to-options/historical-volatility-and-implied-volatility
 import pandas as pd
+import numpy as np
 #Historical Volitiliy is based on past performance - how much stock varies from Market
 def get_dataframe(name):
     
@@ -9,9 +10,9 @@ def get_dataframe(name):
 def historicalVolatility(name):
     df = get_dataframe(name)
     close = df['close']
-    r = diff(log(close))
-    r_mean = mean(r)
+    r = np.diff(np.log(close))
+    r_mean = np.mean(r)
     diff_square = [(r[i]-r_mean)**2 for i in range(0,len(r))]
-    std = sqrt(sum(diff_square)*(1.0/(len(r)-1)))
-    vol = std*sqrt(252)
+    std = np.sqrt(sum(diff_square)*(1.0/(len(r)-1)))
+    vol = std*np.sqrt(252)
     return vol
