@@ -62,40 +62,39 @@ def expectedVolatility(log_return, weights):
     return exp_vol
 
 # Sharpe Ratio
-print('Sharpe Ratio')
-SR = exp_ret/exp_vol
-print(SR)
+def sharpeRatio(exp_ret, exp_vol):
+    print('Sharpe Ratio')
+    SR = exp_ret/exp_vol
+    print(SR)
+    return SR
 
-import multiprocessing
-
-
-ports = 5000
-all_weights = np.zeros((ports, len(stocks.columns)))
-ret_arr = np.zeros(ports)
-vol_arr = np.zeros(ports)
-sharpe_arr = np.zeros(ports)
-start_time = time.time()
-
-
-def getStats(i, log_return):
-    # weights 
-    weights = np.array(np.random.random(5)) 
-    weights = weights/np.sum(weights)  
-	
-    # save the weights
-    all_weights[i,:] = weights
-	
-    # expected return 
-    ret_arr[i] = np.sum((log_return.mean()*weights)*252)
-
-    # expected volatility 
-    vol_arr[i] = np.sqrt(np.dot(weights.T,np.dot(log_return.cov()*252, weights)))
-
-    # Sharpe Ratio 
-    sharpe_arr[i] = ret_arr[i]/vol_arr[i]
-
-for i in range(ports):
-    p = multiprocessing.Process(target=getStats, args=(i,))
-    p.start()
-
-print("--- %s seconds ---" % (time.time() - start_time))   
+def getArrayStats(stocks, ports):
+    import multiprocessing
+    all_weights = np.zeros((ports, len(stocks.columns)))
+    ret_arr = np.zeros(ports)
+    vol_arr = np.zeros(ports)
+    sharpe_arr = np.zeros(ports)
+    start_time = time.time()
+    def getStats(i, log_return):
+        # weights 
+        weights = np.array(np.random.random(5)) 
+        weights = weights/np.sum(weights)  
+        # save the weights
+        all_weights[i,:] = weights
+        # expected return 
+        ret_arr[i] = np.sum((log_return.mean()*weights)*252)
+        # expected volatility 
+        vol_arr[i] = np.sqrt(np.dot(weights.T,np.dot(log_return.cov()*252, weights)))
+        # Sharpe Ratio 
+        sharpe_arr[i] = ret_arr[i]/vol_arr[i]
+    for i in range(ports):
+        p = multiprocessing.Process(target=getStats, args=(i,))
+        p.start()
+    print("--- %s seconds ---" % (time.time() - start_time))   
+    arrayStats = {}
+    arrayStats['weights'].append(all_weights)
+    arrayStats['return'].append(ret_arr)
+    arrayStats['volatility'].append(vol_arr)
+    arrayStats['sharpe'].append(sharpe_arr)
+    return arrayStats
+    
