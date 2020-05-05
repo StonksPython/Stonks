@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 #Historical Volitiliy is based on past performance - how much stock varies from Market
 def get_dataframe(name):
-    
     df = pd.read_csv(('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=JA1VCTFBG7378ZB7&datatype=csv'))
     return df
 def historicalVolatility(name):
