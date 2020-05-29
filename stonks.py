@@ -168,3 +168,40 @@ def predictedPrices(names):
     print(predictions)
     print("--- %s seconds ---" % (time.time() - start_time))
     return predictedPrices
+
+def calculate_ESN(name, rand_seed, nReservoir, spectralRadius, future, futureTotal):
+    data = open(name+".txt").read().split()
+    data = np.array(data).astype('float64')
+    sparsity=0.2
+    noise = .0005
+    nReservoir = nReservoir *1
+    spectralRadius = spectralRadius * 1
+    future = future * 1
+    futureTotal = futureTotal * 1
+
+
+
+    esn = ESN(n_inputs = 1,
+        n_outputs = 1, 
+        n_reservoir = nReservoir,
+        sparsity=sparsity,
+        random_state=rand_seed,
+        spectral_radius = spectralRadius,
+        noise=noise)
+
+    trainlen = data.__len__()-futureTotal
+    pred_tot=np.zeros(futureTotal)
+
+    for i in range(0,futureTotal,future):
+        pred_training = esn.fit(np.ones(trainlen),data[i:trainlen+i])
+        prediction = esn.predict(np.ones(future))
+        pred_tot[i:i+future] = prediction[:,0]
+    return pred_tot
+
+def predictedPricesESN(names,rand_seed, nReservoir, spectralRadius, future, futureTotal):
+    predictedPrices = {}
+    for name in names:
+        predictedPrices[name].append(calculate_ESN(name,rand_seed, nReservoir, spectralRadius, future, futureTotal))
+    return predictedPrices
+
+
