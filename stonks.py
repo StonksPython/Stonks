@@ -7,6 +7,7 @@ import datetime as dt
 from fbprophet import Prophet
 import numpy as np
 import time
+import vaex
 #BackupKey = JA1VCTFBG7378ZB7
 def get_dataframe(name):
     df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
@@ -14,6 +15,10 @@ def get_dataframe(name):
     df = df.set_index(df['Date'])
     df = df.sort_index()
     df = df.drop(columns=['open', 'low', 'high', 'volume'])
+    return df
+
+def get_raw_dataframe_as_vaex(name):
+    df = vaex.from_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
     return df
 
 def get_series(names):
