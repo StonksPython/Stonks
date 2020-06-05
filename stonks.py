@@ -21,6 +21,15 @@ def get_raw_dataframe_as_vaex(name):
     df = vaex.from_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
     return df
 
+def get_dataframe_as_vaex(name):
+    df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
+    df = df.rename(columns={"timestamp":"Date"})
+    df = df.set_index(df['Date'])
+    df = df.sort_index()
+    df = df.drop(columns=['open', 'low', 'high', 'volume'])
+    vdf = vaex.from_pandas(df)
+    return vdf
+
 def get_series(names):
     series = []
     for name in names:
