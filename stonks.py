@@ -4,6 +4,7 @@ from pandas_datareader import data
 import matplotlib.pyplot as plt
 import pandas as pd
 import datetime as dt
+import databricks.koalas as ks
 from fbprophet import Prophet
 import numpy as np
 import time
@@ -11,6 +12,18 @@ import vaex
 #BackupKey = JA1VCTFBG7378ZB7
 def get_dataframe(name):
     df = pd.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
+    df = df.rename(columns={"timestamp":"Date"})
+    df = df.set_index(df['Date'])
+    df = df.sort_index()
+    df = df.drop(columns=['open', 'low', 'high', 'volume'])
+    return df
+
+def get_raw_dataframe_koalas(name):
+    df = ks.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
+    return df
+
+def get_dataframe_koalas(name):
+    df = ks.read_csv('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + name +'&apikey=WCXVE7BAD668SJHL&datatype=csv')
     df = df.rename(columns={"timestamp":"Date"})
     df = df.set_index(df['Date'])
     df = df.sort_index()
